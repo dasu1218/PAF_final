@@ -1,0 +1,8 @@
+com/example/resourceapp/model/User.class
+com/example/resourceapp/controller/AuthController.class
+com/example/resourceapp/service/AuthService.class
+com/example/resourceapp/dto/SignupRequest.class
+com/example/resourceapp/dto/AuthResponse.class
+com/example/resourceapp/exception/AuthenticationFailedException.class
+com/example/resourceapp/dto/AuthRequest.class
+com/example/resourceapp/repository/UserRepository.class
