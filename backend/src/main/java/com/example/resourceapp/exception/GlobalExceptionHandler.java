@@ -49,8 +49,35 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleBookingNotFoundException(BookingNotFoundException ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BookingConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleBookingConflictException(BookingConflictException ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.CONFLICT.value());
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalStateException(IllegalStateException ex) {
         Map<String, Object> errorDetails = new HashMap<>();
         errorDetails.put("timestamp", LocalDateTime.now());
         errorDetails.put("message", ex.getMessage());

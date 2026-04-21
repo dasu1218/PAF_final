@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Resource } from '../types/Resource';
 import { resourceApi } from '../api/resourceApi';
-import { Search, Filter, MapPin, Users, Activity, Settings, SlidersHorizontal, LibraryBig } from 'lucide-react';
+import { Search, Filter, MapPin, Users, Activity, Settings, SlidersHorizontal, LibraryBig, Calendar } from 'lucide-react';
+import { BookingForm } from './BookingForm';
 
 export const Catalogue: React.FC = () => {
   const [resources, setResources] = useState<Resource[]>([]);
@@ -9,6 +10,14 @@ export const Catalogue: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [minCapacity, setMinCapacity] = useState<number | ''>('');
+  const [selectedResourceForBooking, setSelectedResourceForBooking] = useState<Resource | null>(null);
+  const [userId, setUserId] = useState<string>('');
+
+  // Get user ID from localStorage or sessionStorage
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'guest-user';
+    setUserId(storedUserId);
+  }, []);
 
   useEffect(() => {
     loadResources();
@@ -36,6 +45,22 @@ export const Catalogue: React.FC = () => {
   });
 
   const uniqueTypes = Array.from(new Set(resources.map(r => r.type)));
+
+  if (selectedResourceForBooking) {
+    return (
+      <>
+        <BookingForm 
+          resource={selectedResourceForBooking}
+          onSuccess={() => {
+            setSelectedResourceForBooking(null);
+            loadResources();
+          }}
+          onCancel={() => setSelectedResourceForBooking(null)}
+          userId={userId}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -168,6 +193,15 @@ export const Catalogue: React.FC = () => {
                       </div>
                     </div>
                   )}
+
+                  <button
+                    onClick={() => setSelectedResourceForBooking(resource)}
+                    disabled={resource.status !== 'ACTIVE'}
+                    className="w-full mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#F27D26] px-5 py-3 font-medium text-white shadow-lg shadow-[#F27D26]/25 transition hover:-translate-y-0.5 hover:bg-[#ff9548] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:bg-[#F27D26]"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    Book Now
+                  </button>
                 </div>
               </div>
             ))
