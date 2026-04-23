@@ -31,7 +31,14 @@ function App() {
     const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
     if (storedUser) {
       try {
-        setCurrentUser(JSON.parse(storedUser) as AuthUser);
+        const user = JSON.parse(storedUser) as AuthUser;
+        setCurrentUser(user);
+        // Route based on role after loading user from storage
+        if (user.role === 'ADMIN' || user.role === 'TECHNICIAN') {
+          setActiveTab('admin');
+        } else {
+          setActiveTab('home');
+        }
       } catch {
         localStorage.removeItem(AUTH_STORAGE_KEY);
       }
@@ -66,7 +73,13 @@ function App() {
   const handleAuthenticated = (user: AuthUser) => {
     setCurrentUser(user);
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-    setActiveTab('home');
+    
+    // Route based on role
+    if (user.role === 'ADMIN' || user.role === 'TECHNICIAN') {
+      setActiveTab('admin');
+    } else {
+      setActiveTab('home');
+    }
   };
 
   const handleLogout = () => {
@@ -127,17 +140,19 @@ function App() {
                   <LayoutGrid className="h-4 w-4" />
                   Catalogue
                 </button>
-                <button
-                  onClick={() => setActiveTab('admin')}
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                    activeTab === 'admin'
-                      ? 'bg-[#F27D26] text-white shadow-lg shadow-[#F27D26]/25'
-                      : 'text-secondary hover:bg-input hover:text-primary'
-                  }`}
-                >
-                  <ShieldAlert className="h-4 w-4" />
-                  Admin
-                </button>
+                {(currentUser?.role === 'ADMIN' || currentUser?.role === 'TECHNICIAN') && (
+                  <button
+                    onClick={() => setActiveTab('admin')}
+                    className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                      activeTab === 'admin'
+                        ? 'bg-[#F27D26] text-white shadow-lg shadow-[#F27D26]/25'
+                        : 'text-secondary hover:bg-input hover:text-primary'
+                    }`}
+                  >
+                    <ShieldAlert className="h-4 w-4" />
+                    Admin
+                  </button>
+                )}
               </nav>
 
               <button

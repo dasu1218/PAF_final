@@ -29,9 +29,10 @@ public class AuthService {
         user.setName(request.getName().trim());
         user.setEmail(request.getEmail().trim().toLowerCase());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        user.setRole("USER"); // Default role for new users
 
         User savedUser = userRepository.save(user);
-        return new AuthResponse(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), "Signup successful");
+        return new AuthResponse(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), "Signup successful", savedUser.getRole());
     }
 
     public AuthResponse login(AuthRequest request) {
@@ -42,6 +43,6 @@ public class AuthService {
             throw new AuthenticationFailedException("Invalid email or password");
         }
 
-        return new AuthResponse(user.getId(), user.getName(), user.getEmail(), "Login successful");
+        return new AuthResponse(user.getId(), user.getName(), user.getEmail(), "Login successful", user.getRole());
     }
 }

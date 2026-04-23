@@ -160,7 +160,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenCatalogue, onOpenAdmin
           className="absolute inset-0 h-full w-full object-cover"
           aria-hidden="true"
         >
-          <source src={heroVideo} type="video/mp4" />
+         
         </video>
         <div className="absolute inset-0 bg-slate-950/55" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(242,125,38,0.35),transparent_35%),radial-gradient(circle_at_top_right,rgba(14,165,233,0.25),transparent_32%)]" />

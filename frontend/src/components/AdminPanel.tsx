@@ -4,14 +4,15 @@ import { BookingResponse } from '../types/Booking';
 import { resourceApi } from '../api/resourceApi';
 import { bookingApi } from '../api/bookingApi';
 import { ResourceForm } from './ResourceForm';
-import { Plus, Edit2, Trash2, ShieldCheck, CircleAlert, Database, Check, X, Clock, Calendar, AlertCircle, Users } from 'lucide-react';
+import { TicketCatalogue } from './TicketCatalogue';
+import { Plus, Edit2, Trash2, ShieldCheck, CircleAlert, Database, Check, X, Clock, Calendar, AlertCircle, Users, Ticket } from 'lucide-react';
 
 export const AdminPanel: React.FC = () => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [bookingsLoading, setBooksLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'resources' | 'bookings'>('resources');
+  const [activeTab, setActiveTab] = useState<'resources' | 'bookings' | 'tickets'>('resources');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | undefined>();
   const [resourceToDelete, setResourceToDelete] = useState<string | null>(null);
@@ -19,10 +20,21 @@ export const AdminPanel: React.FC = () => {
   const [adminId, setAdminId] = useState<string>('');
   const [rejectionReason, setRejectionReason] = useState<string>('');
   const [userId, setUserId] = useState('');
+  const [adminName, setAdminName] = useState('');
 
   useEffect(() => {
     const storedAdminId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'admin-user';
+    const storedUser = localStorage.getItem('resource-app-user');
     setAdminId(storedAdminId);
+    
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setAdminName(user.name || 'Admin');
+      } catch {
+        setAdminName('Admin');
+      }
+    }
   }, []);
 
   const loadResources = async () => {
@@ -136,12 +148,14 @@ export const AdminPanel: React.FC = () => {
               Admin workspace
             </p>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-              {activeTab === 'resources' ? 'Resource management' : 'Booking approvals'}
+              {activeTab === 'resources' ? 'Resource management' : activeTab === 'bookings' ? 'Booking approvals' : 'Maintenance tickets'}
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-secondary sm:text-base">
               {activeTab === 'resources' 
                 ? 'Add, update, or remove resources from one focused table view.'
-                : 'Review and approve or reject booking requests from students.'}
+                : activeTab === 'bookings'
+                ? 'Review and approve or reject booking requests from students.'
+                : 'Monitor and manage maintenance and incident tickets from users.'}
             </p>
           </div>
 
@@ -181,6 +195,17 @@ export const AdminPanel: React.FC = () => {
                 {bookings.filter(b => b.status === 'PENDING').length}
               </span>
             )}
+          </button>
+          <button
+            onClick={() => setActiveTab('tickets')}
+            className={`px-4 py-2 font-semibold transition-colors flex items-center gap-2 ${
+              activeTab === 'tickets'
+                ? 'border-b-2 border-[#F27D26] text-[#F27D26]'
+                : 'text-secondary hover:text-primary'
+            }`}
+          >
+            <Ticket className="h-4 w-4" />
+            Tickets
           </button>
         </div>
 
@@ -425,6 +450,15 @@ export const AdminPanel: React.FC = () => {
             ))
           )}
         </div>
+      )}
+
+      {/* Tickets Tab */}
+      {activeTab === 'tickets' && (
+        <TicketCatalogue
+          userId={adminId}
+          userName={adminName}
+          userRole="ADMIN"
+        />
       )}
 
       {/* Custom Confirmation Modal */}

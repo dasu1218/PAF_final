@@ -3,6 +3,7 @@ export interface AuthUser {
   name: string;
   email: string;
   message?: string;
+  role?: 'ADMIN' | 'TECHNICIAN' | 'USER';
 }
 
 export interface LoginPayload {

@@ -23,6 +23,8 @@ public class User {
     @NotBlank(message = "Password hash is required")
     private String passwordHash;
 
+    private String role = "USER"; // Default role: USER, can be ADMIN or TECHNICIAN
+
     public String getId() {
         return id;
     }
@@ -53,5 +55,13 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role != null ? role : "USER";
     }
 }
