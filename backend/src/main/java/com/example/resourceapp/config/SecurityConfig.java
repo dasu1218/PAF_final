@@ -2,7 +2,6 @@ package com.example.resourceapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -12,27 +11,21 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(withDefaults())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/login/**", "/oauth2/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/technician/**").hasAnyRole("ADMIN", "TECHNICIAN")
-                .anyRequest().authenticated()
+                .requestMatchers("/**", "/api/**", "/h2-console/**").permitAll()
+                .anyRequest().permitAll()
             )
-            .oauth2Login(oauth2 -> oauth2
-                .defaultSuccessUrl("/api/auth/oauth-success", true)
-            );
+            .headers(headers -> headers.frameOptions().disable())
+            .oauth2Login(oauth2 -> oauth2.disable());
         
         return http.build();
     }
