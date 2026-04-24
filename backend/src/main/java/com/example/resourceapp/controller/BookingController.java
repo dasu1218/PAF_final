@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class BookingController {
      * GET /api/bookings
      */
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
         List<BookingResponse> bookings = bookingService.getAllBookings();
         return new ResponseEntity<>(bookings, HttpStatus.OK);
@@ -102,6 +104,7 @@ public class BookingController {
      * PUT /api/bookings/{bookingId}/approve
      */
     @PutMapping("/{bookingId}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookingResponse> approveBooking(
             @PathVariable String bookingId,
             @RequestHeader(value = "X-User-Id", required = false) String adminId) {
@@ -119,6 +122,7 @@ public class BookingController {
      * PUT /api/bookings/{bookingId}/reject
      */
     @PutMapping("/{bookingId}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<BookingResponse> rejectBooking(
             @PathVariable String bookingId,
             @RequestBody Map<String, String> requestBody) {

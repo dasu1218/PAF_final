@@ -45,4 +45,24 @@ public class AuthService {
 
         return new AuthResponse(user.getId(), user.getName(), user.getEmail(), "Login successful", user.getRole());
     }
+
+    public AuthResponse loginOrSignupOAuth(String email, String name, String googleId) {
+        User user = userRepository.findByEmail(email.trim().toLowerCase())
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setEmail(email.trim().toLowerCase());
+                    newUser.setName(name);
+                    newUser.setGoogleId(googleId);
+                    newUser.setPasswordHash("OAUTH_USER"); // Placeholder
+                    newUser.setRole("USER");
+                    return userRepository.save(newUser);
+                });
+
+        if (user.getGoogleId() == null) {
+            user.setGoogleId(googleId);
+            userRepository.save(user);
+        }
+
+        return new AuthResponse(user.getId(), user.getName(), user.getEmail(), "Login successful", user.getRole());
+    }
 }

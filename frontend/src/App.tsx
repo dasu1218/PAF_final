@@ -3,7 +3,8 @@ import { AuthScreen } from './components/AuthScreen';
 import { HomePage } from './components/HomePage';
 import { Catalogue } from './components/Catalogue';
 import { AdminPanel } from './components/AdminPanel';
-import { LayoutGrid, ShieldAlert, Sun, Moon, Home as HomeIcon, Sparkles } from 'lucide-react';
+import { NotificationPanel } from './components/NotificationPanel';
+import { LayoutGrid, ShieldAlert, Sun, Moon, Home as HomeIcon, Sparkles, Bell } from 'lucide-react';
 import type { AuthUser } from './types/Auth';
 
 const AUTH_STORAGE_KEY = 'resource-app-user';
@@ -28,6 +29,20 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // Check for OAuth callback data in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthUserBase64 = urlParams.get('user');
+    if (oauthUserBase64) {
+      try {
+        const user = JSON.parse(atob(oauthUserBase64)) as AuthUser;
+        handleAuthenticated(user);
+        // Clear the query params
+        window.history.replaceState({}, document.title, "/");
+      } catch (e) {
+        console.error("Failed to parse OAuth user", e);
+      }
+    }
+
     const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
     if (storedUser) {
       try {
@@ -154,6 +169,8 @@ function App() {
                   </button>
                 )}
               </nav>
+
+              <NotificationPanel userId={currentUser.id} />
 
               <button
                 onClick={toggleTheme}

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -34,16 +35,19 @@ public class ResourceController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> createResource(@Valid @RequestBody Resource resource) {
         return new ResponseEntity<>(resourceService.createResource(resource), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Resource> updateResource(@PathVariable String id, @Valid @RequestBody Resource resourceDetails) {
         return new ResponseEntity<>(resourceService.updateResource(id, resourceDetails), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteResource(@PathVariable String id) {
         resourceService.deleteResource(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

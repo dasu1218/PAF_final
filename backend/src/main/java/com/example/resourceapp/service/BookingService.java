@@ -22,11 +22,13 @@ public class BookingService {
 
     private final BookingRepository bookingRepository;
     private final ResourceRepository resourceRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository, ResourceRepository resourceRepository) {
+    public BookingService(BookingRepository bookingRepository, ResourceRepository resourceRepository, NotificationService notificationService) {
         this.bookingRepository = bookingRepository;
         this.resourceRepository = resourceRepository;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -147,6 +149,15 @@ public class BookingService {
         booking.setApprovedBy(adminId);
 
         Booking savedBooking = bookingRepository.save(booking);
+        
+        // Notify user
+        notificationService.createNotification(
+            booking.getUserId(),
+            "Your booking for " + booking.getResourceId() + " has been APPROVED.",
+            "BOOKING",
+            booking.getId()
+        );
+        
         return convertToResponse(savedBooking);
     }
 
@@ -165,6 +176,15 @@ public class BookingService {
         booking.setRejectionReason(rejectionReason);
 
         Booking savedBooking = bookingRepository.save(booking);
+
+        // Notify user
+        notificationService.createNotification(
+            booking.getUserId(),
+            "Your booking for " + booking.getResourceId() + " has been REJECTED. Reason: " + rejectionReason,
+            "BOOKING",
+            booking.getId()
+        );
+
         return convertToResponse(savedBooking);
     }
 
@@ -184,6 +204,16 @@ public class BookingService {
         booking.setCancellationReason(cancellationReason);
 
         Booking savedBooking = bookingRepository.save(booking);
+
+        // Notify relevant parties if needed (e.g., admin)
+        // For now, just notify the user themselves as confirmation
+        notificationService.createNotification(
+            booking.getUserId(),
+            "Your booking for " + booking.getResourceId() + " has been CANCELLED.",
+            "BOOKING",
+            booking.getId()
+        );
+
         return convertToResponse(savedBooking);
     }
 

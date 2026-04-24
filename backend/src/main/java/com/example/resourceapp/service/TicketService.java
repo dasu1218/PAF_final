@@ -14,10 +14,12 @@ import java.util.UUID;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepository ticketRepository, NotificationService notificationService) {
         this.ticketRepository = ticketRepository;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -122,6 +124,15 @@ public class TicketService {
         ticket.setUpdatedAt(LocalDateTime.now());
 
         Ticket updatedTicket = ticketRepository.save(ticket);
+
+        // Notify technician
+        notificationService.createNotification(
+            ticket.getAssignedToUserId(),
+            "A new ticket (" + ticket.getId() + ") has been assigned to you.",
+            "TICKET",
+            ticket.getId()
+        );
+
         return convertToResponse(updatedTicket);
     }
 
@@ -166,6 +177,15 @@ public class TicketService {
         ticket.setUpdatedAt(LocalDateTime.now());
 
         Ticket updatedTicket = ticketRepository.save(ticket);
+
+        // Notify creator
+        notificationService.createNotification(
+            ticket.getCreatedByUserId(),
+            "The status of your ticket (" + ticket.getId() + ") has changed to " + newStatus + ".",
+            "TICKET",
+            ticket.getId()
+        );
+
         return convertToResponse(updatedTicket);
     }
 
@@ -206,6 +226,26 @@ public class TicketService {
         ticket.setUpdatedAt(LocalDateTime.now());
 
         Ticket updatedTicket = ticketRepository.save(ticket);
+
+        // Notify relevant parties
+        // If creator commented, notify technician (if assigned)
+        // If someone else commented, notify creator
+        if (!ticket.getCreatedByUserId().equals(userId)) {
+            notificationService.createNotification(
+                ticket.getCreatedByUserId(),
+                "A new comment was added to your ticket (" + ticket.getId() + ") by " + userName + ".",
+                "COMMENT",
+                ticket.getId()
+            );
+        } else if (ticket.getAssignedToUserId() != null) {
+            notificationService.createNotification(
+                ticket.getAssignedToUserId(),
+                "The creator of ticket (" + ticket.getId() + ") has added a new comment.",
+                "COMMENT",
+                ticket.getId()
+            );
+        }
+
         return convertToResponse(updatedTicket);
     }
 

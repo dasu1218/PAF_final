@@ -23,7 +23,9 @@ public class User {
     @NotBlank(message = "Password hash is required")
     private String passwordHash;
 
-    private String role = "USER"; // Default role: USER, can be ADMIN or TECHNICIAN
+    private String googleId; // For OAuth 2.0
+
+    private String role = "USER"; // Roles: USER, ADMIN, TECHNICIAN, MANAGER
 
     public String getId() {
         return id;
@@ -55,6 +57,14 @@ public class User {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
     }
 
     public String getRole() {

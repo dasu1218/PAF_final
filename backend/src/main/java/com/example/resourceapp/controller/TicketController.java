@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -111,6 +112,7 @@ public class TicketController {
      * PUT /api/tickets/{ticketId}/assign
      */
     @PutMapping("/{ticketId}/assign")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<TicketResponse> assignTicket(
             @PathVariable String ticketId,
             @Valid @RequestBody AssignTicketRequest request) {
@@ -123,6 +125,7 @@ public class TicketController {
      * PUT /api/tickets/{ticketId}/status
      */
     @PutMapping("/{ticketId}/status")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<TicketResponse> updateTicketStatus(
             @PathVariable String ticketId,
             @Valid @RequestBody UpdateTicketStatusRequest request) {
