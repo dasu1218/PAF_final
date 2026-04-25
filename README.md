@@ -1,16 +1,18 @@
 # PAF (Platform Administration Framework)
 
-## 🎉 Module C: Maintenance & Incident Ticketing - IMPLEMENTATION COMPLETE ✅
+## Module C: Maintenance & Incident Ticketing - IMPLEMENTATION COMPLETE 
+
+
 
 This project now includes **Module C - Maintenance & Incident Ticketing** with complete backend and frontend implementation.
 
-### 📊 What's New (Module C)
-- ✅ **Ticket Creation System** - Create incident tickets with category, priority, description
-- ✅ **Image Attachments** - Upload up to 3 images per ticket
-- ✅ **Workflow Management** - Status flow: OPEN → IN_PROGRESS → RESOLVED → CLOSED or REJECTED
-- ✅ **Comments System** - Add/edit/delete comments with ownership rules
-- ✅ **Technician Assignment** - Assign tickets to staff members
-- ✅ **Role-Based Access** - Different permissions for USER, TECHNICIAN, ADMIN
+###  What's New (Module C)
+-  **Ticket Creation System** - Create incident tickets with category, priority, description
+-  **Image Attachments** - Upload up to 3 images per ticket
+-  **Workflow Management** - Status flow: OPEN → IN_PROGRESS → RESOLVED → CLOSED or REJECTED
+-  **Comments System** - Add/edit/delete comments with ownership rules
+-  **Technician Assignment** - Assign tickets to staff members
+-  **Role-Based Access** - Different permissions for USER, TECHNICIAN, ADMIN
 
 ### 📂 Module C Files Added
 - **17 Backend Java files** (models, DTOs, service, controller, repository)
