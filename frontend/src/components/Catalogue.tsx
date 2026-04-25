@@ -13,7 +13,7 @@ export const Catalogue: React.FC = () => {
   const [selectedResourceForBooking, setSelectedResourceForBooking] = useState<Resource | null>(null);
   const [userId, setUserId] = useState<string>('');
 
-  // Get user ID from localStorage or sessionStorage
+
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId') || sessionStorage.getItem('userId') || 'guest-user';
     setUserId(storedUserId);
