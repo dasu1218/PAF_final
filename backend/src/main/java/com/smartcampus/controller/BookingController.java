@@ -127,11 +127,7 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Delete a booking (only pending/rejected bookings)
-     * Endpoint: DELETE /api/bookings/{id}
-     * Access: USER (own bookings), ADMIN (all bookings)
-     */
+    
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<Map<String, String>> deleteBooking(
