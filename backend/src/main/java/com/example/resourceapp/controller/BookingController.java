@@ -26,10 +26,7 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    /**
-     * Create a new booking request
-     * POST /api/bookings
-     */
+    
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(
             @Valid @RequestBody BookingRequest bookingRequest,
