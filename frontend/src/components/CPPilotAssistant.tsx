@@ -7,7 +7,6 @@ const starterPrompts = [
   'Where can I open SLIIT EduScope?',
   'How can I use the Virtual Lab?',
 ];
-
 export const CPPilotAssistant: React.FC = () => {
   const [messages, setMessages] = useState<PilotMessage[]>([
     {
@@ -35,7 +34,6 @@ export const CPPilotAssistant: React.FC = () => {
     setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
     setLoading(false);
   };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     await submitQuestion(input);
